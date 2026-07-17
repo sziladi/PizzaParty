@@ -1,0 +1,38 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Core;
+
+class Router
+{
+    private array $routes = [];
+
+    public function get(string $path, callable|array $handler): void
+    {
+        $this->routes['GET'][$path] = $handler;
+    }
+
+    public function dispatch(string $method, string $uri): void
+    {
+        $path = parse_url($uri, PHP_URL_PATH);
+
+        $handler = $this->routes[$method][$path] ?? null;
+
+        if ($handler === null) {
+            http_response_code(404);
+            echo "<h1>404</h1>";
+            echo "<p>Az oldal nem található.</p>";
+            return;
+        }
+
+        if (is_callable($handler)) {
+            call_user_func($handler);
+            return;
+        }
+
+        [$controller, $action] = $handler;
+
+        (new $controller())->$action();
+    }
+}
