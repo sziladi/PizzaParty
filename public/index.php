@@ -3,16 +3,16 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../app/Core/Router.php';
+require_once __DIR__ . '/../app/Core/View.php';
+require_once __DIR__ . '/../app/Core/Config.php';
+require_once __DIR__ . '/../app/Core/Application.php';
+
+require_once __DIR__ . '/../app/Models/PizzaModel.php';
+
 require_once __DIR__ . '/../app/Controllers/HomeController.php';
 
-use App\Core\Router;
-use App\Controllers\HomeController;
+use App\Core\Application;
 
-$router = new Router();
+$app = new Application();
 
-$router->get('/', [HomeController::class, 'index']);
-
-$router->dispatch(
-    $_SERVER['REQUEST_METHOD'],
-    $_SERVER['REQUEST_URI']
-);
+$app->run();
