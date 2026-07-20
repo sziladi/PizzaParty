@@ -1,27 +1,27 @@
 <h2>Új pizzaest</h2>
 
-<form>
+<form method="post" action="/event/create">
 
     <p>
         <label>Esemény neve</label><br>
-        <input type="text">
+        <input type="text" name="event_name">
     </p>
 
     <p>
         <label>Étterem neve</label><br>
-        <input type="text">
+        <input type="text" name="restaurant_name">
     </p>
 
     <p>
         <label>Étlap URL</label><br>
-        <input type="url">
+        <input type="url" name="menu_url">
     </p>
 
     <p>
         <label>Dátum</label><br>
-        <input type="date">
+        <input type="date" name="event_date">
     </p>
 
-    <button>Létrehozás</button>
+    <button type="submit">Létrehozás</button>
 
 </form>

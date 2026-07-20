@@ -16,17 +16,25 @@ class Application
     }
 
     private function registerRoutes(): void
-{
-    $this->router->get(
-        '/',
-        [\App\Controllers\HomeController::class, 'index']
-    );
+    {
+        // Főoldal
+        $this->router->get(
+            '/',
+            [\App\Controllers\HomeController::class, 'index']
+        );
 
-    $this->router->get(
-        '/event/create',
-        [\App\Controllers\EventController::class, 'create']
-    );
-}
+        // Esemény létrehozó oldal (GET)
+        $this->router->get(
+            '/event/create',
+            [\App\Controllers\EventController::class, 'create']
+        );
+
+        // Űrlap feldolgozása (POST)
+        $this->router->post(
+            '/event/create',
+            [\App\Controllers\EventController::class, 'store']
+        );
+    }
 
     public function run(): void
     {
