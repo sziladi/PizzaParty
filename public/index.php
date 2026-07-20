@@ -11,6 +11,8 @@ require_once __DIR__ . '/../app/Models/PizzaModel.php';
 
 require_once __DIR__ . '/../app/Controllers/HomeController.php';
 
+require_once __DIR__ . '/../app/Controllers/EventController.php';
+
 use App\Core\Application;
 
 $app = new Application();

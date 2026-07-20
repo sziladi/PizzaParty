@@ -15,7 +15,8 @@ class PizzaModel
             'Magyaros',
             'Négysajtos',
             'Guru Frutti di Mare',
-            'Húshegy'
+            'Húshegy',
+            'Bugyis pöcök szaga'
             
         ];
     }

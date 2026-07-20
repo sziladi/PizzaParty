@@ -16,12 +16,17 @@ class Application
     }
 
     private function registerRoutes(): void
-    {
-        $this->router->get(
-            '/',
-            [\App\Controllers\HomeController::class, 'index']
-        );
-    }
+{
+    $this->router->get(
+        '/',
+        [\App\Controllers\HomeController::class, 'index']
+    );
+
+    $this->router->get(
+        '/event/create',
+        [\App\Controllers\EventController::class, 'create']
+    );
+}
 
     public function run(): void
     {
