@@ -6,6 +6,9 @@ namespace App\Core;
 
 class Router
 {
+    /**
+     * @var array<string, array<string, callable|array>>
+     */
     private array $routes = [];
 
     public function get(string $path, callable|array $handler): void
@@ -14,9 +17,9 @@ class Router
     }
 
     public function post(string $path, callable|array $handler): void
-{
-    $this->routes['POST'][$path] = $handler;
-}
+    {
+        $this->routes['POST'][$path] = $handler;
+    }
 
     public function dispatch(string $method, string $uri): void
     {
@@ -26,18 +29,28 @@ class Router
 
         if ($handler === null) {
             http_response_code(404);
-            echo "<h1>404</h1>";
-            echo "<p>Az oldal nem található.</p>";
+
+            echo '404 - Az oldal nem található.';
             return;
         }
 
         if (is_callable($handler)) {
-            call_user_func($handler);
+            $handler();
             return;
         }
 
         [$controller, $action] = $handler;
 
-        (new $controller())->$action();
+        $request = new Request();
+
+        $controllerInstance = new $controller();
+
+        $reflection = new \ReflectionMethod($controllerInstance, $action);
+
+        if ($reflection->getNumberOfParameters() > 0) {
+            $controllerInstance->$action($request);
+        } else {
+            $controllerInstance->$action();
+        }
     }
 }
