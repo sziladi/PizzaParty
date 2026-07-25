@@ -4,21 +4,23 @@ declare(strict_types=1);
 
 namespace App\Core;
 
+use ReflectionMethod;
+
 class Router
 {
-    /**
-     * @var array<string, array<string, callable|array>>
-     */
-    private array $routes = [];
+    private array $routes = [
+        'GET' => [],
+        'POST' => [],
+    ];
 
-    public function get(string $path, callable|array $handler): void
+    public function get(string $uri, callable|array $handler): void
     {
-        $this->routes['GET'][$path] = $handler;
+        $this->routes['GET'][$uri] = $handler;
     }
 
-    public function post(string $path, callable|array $handler): void
+    public function post(string $uri, callable|array $handler): void
     {
-        $this->routes['POST'][$path] = $handler;
+        $this->routes['POST'][$uri] = $handler;
     }
 
     public function dispatch(string $method, string $uri): void
@@ -27,10 +29,9 @@ class Router
 
         $handler = $this->routes[$method][$path] ?? null;
 
-        if ($handler === null) {
+        if (!$handler) {
             http_response_code(404);
-
-            echo '404 - Az oldal nem található.';
+            echo '404 - Oldal nem található';
             return;
         }
 
@@ -41,16 +42,32 @@ class Router
 
         [$controller, $action] = $handler;
 
-        $request = new Request();
-
         $controllerInstance = new $controller();
 
-        $reflection = new \ReflectionMethod($controllerInstance, $action);
+        $reflection = new ReflectionMethod($controllerInstance, $action);
 
-        if ($reflection->getNumberOfParameters() > 0) {
-            $controllerInstance->$action($request);
-        } else {
-            $controllerInstance->$action();
+        $arguments = [];
+
+        foreach ($reflection->getParameters() as $parameter) {
+
+            $type = $parameter->getType();
+
+            if ($type === null) {
+                continue;
+            }
+
+            switch ($type->getName()) {
+
+                case Request::class:
+                    $arguments[] = new Request();
+                    break;
+
+                case Response::class:
+                    $arguments[] = new Response();
+                    break;
+            }
         }
+
+        $controllerInstance->$action(...$arguments);
     }
 }
