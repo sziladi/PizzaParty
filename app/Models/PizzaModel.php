@@ -4,20 +4,19 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Core\Database;
+use PDO;
+
 class PizzaModel
 {
     public function getFeaturedPizzas(): array
     {
-        return [
-            'Margherita',
-            'Sonkás',
-            'Hawaii',
-            'Magyaros',
-            'Négysajtos',
-            'Guru Frutti di Mare',
-            'Húshegy',
-            'Bugyis pöcök szaga'
-            
-        ];
+        $pdo = Database::connection();
+
+        $statement = $pdo->query(
+            'SELECT name FROM pizzas ORDER BY id'
+        );
+
+        return $statement->fetchAll(PDO::FETCH_COLUMN);
     }
 }

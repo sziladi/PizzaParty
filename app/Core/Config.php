@@ -12,6 +12,16 @@ class Config
             'version' => '0.1.0',
             'environment' => 'development',
         ],
+
+        'database' => [
+            'driver'   => 'mysql',
+            'host'     => 'mysql',
+            'port'     => 3306,
+            'database' => 'pizzaparty',
+            'username' => 'pizzaparty',
+            'password' => 'pizzaparty123',
+            'charset'  => 'utf8mb4',
+        ],
     ];
 
     public static function get(string $group, string $key): mixed
