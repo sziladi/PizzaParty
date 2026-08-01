@@ -8,6 +8,7 @@ use App\Core\Config;
 use App\Core\Request;
 use App\Core\Response;
 use App\Core\View;
+use App\Models\EventModel;
 
 class EventController
 {
@@ -22,20 +23,27 @@ class EventController
 
     public function store(Request $request, Response $response): void
     {
+        $eventModel = new EventModel();
+
+        $eventModel->create(
+            (string) $request->input('event_name'),
+            (string) $request->input('restaurant_name'),
+            (string) $request->input('menu_url'),
+            (string) $request->input('event_date')
+        );
+
         $html = '
-            <h2>Pizzaest létrehozva!</h2>
+            <h2>Pizzaest sikeresen létrehozva!</h2>
 
-            <p><strong>Esemény:</strong> '
-            . htmlspecialchars((string) $request->input('event_name')) . '</p>
+            <p>Az esemény bekerült az adatbázisba.</p>
 
-            <p><strong>Étterem:</strong> '
-            . htmlspecialchars((string) $request->input('restaurant_name')) . '</p>
+            <p>
+                <a href="/">Vissza a főoldalra</a>
+            </p>
 
-            <p><strong>Étlap:</strong> '
-            . htmlspecialchars((string) $request->input('menu_url')) . '</p>
-
-            <p><strong>Dátum:</strong> '
-            . htmlspecialchars((string) $request->input('event_date')) . '</p>';
+            <p>
+                <a href="/event/create">Új esemény létrehozása</a>
+            </p>';
 
         $response->send($html);
     }

@@ -11,6 +11,7 @@ require_once __DIR__ . '/../app/Core/Database.php';
 require_once __DIR__ . '/../app/Core/Application.php';
 
 require_once __DIR__ . '/../app/Models/PizzaModel.php';
+require_once __DIR__ . '/../app/Models/EventModel.php';
 
 require_once __DIR__ . '/../app/Controllers/HomeController.php';
 require_once __DIR__ . '/../app/Controllers/EventController.php';

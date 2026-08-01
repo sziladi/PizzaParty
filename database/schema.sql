@@ -3,3 +3,12 @@ CREATE TABLE pizzas (
     name VARCHAR(100) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE events (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    event_name VARCHAR(255) NOT NULL,
+    restaurant_name VARCHAR(255) NOT NULL,
+    menu_url VARCHAR(500) NOT NULL,
+    event_date DATE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
