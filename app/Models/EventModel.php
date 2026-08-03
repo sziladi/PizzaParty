@@ -39,4 +39,17 @@ class EventModel
             'event_date' => $eventDate,
         ]);
     }
+
+    public function getAll(): array
+    {
+        $pdo = Database::connection();
+
+        $statement = $pdo->query(
+            'SELECT *
+             FROM events
+             ORDER BY event_date ASC'
+        );
+
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
