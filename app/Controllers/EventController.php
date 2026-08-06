@@ -38,12 +38,35 @@ class EventController
             <p>Az esemény bekerült az adatbázisba.</p>
 
             <p>
-                <a href="/">Vissza a főoldalra</a>
+                <a class="button" href="/">Vissza a főoldalra</a>
             </p>
 
             <p>
-                <a href="/event/create">Új esemény létrehozása</a>
+                <a class="button" href="/event/create">Új pizzaest létrehozása</a>
             </p>';
+
+        $response->send($html);
+    }
+
+    public function show(int $id, Response $response): void
+    {
+        $eventModel = new EventModel();
+
+        $event = $eventModel->findById($id);
+
+        if ($event === null) {
+
+            http_response_code(404);
+
+            $response->send('<h2>404 - Az esemény nem található.</h2>');
+
+            return;
+        }
+
+        $html = View::render('event/show', [
+            'title' => $event['event_name'],
+            'event' => $event,
+        ]);
 
         $response->send($html);
     }

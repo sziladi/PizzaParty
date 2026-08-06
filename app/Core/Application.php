@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Core;
 
+use App\Controllers\EventController;
+use App\Controllers\HomeController;
+
 class Application
 {
     private Router $router;
@@ -17,23 +20,25 @@ class Application
 
     private function registerRoutes(): void
     {
-        // Főoldal
-        $this->router->get(
-            '/',
-            [\App\Controllers\HomeController::class, 'index']
-        );
+        $this->router->get('/', [
+            HomeController::class,
+            'index',
+        ]);
 
-        // Esemény létrehozó oldal (GET)
-        $this->router->get(
-            '/event/create',
-            [\App\Controllers\EventController::class, 'create']
-        );
+        $this->router->get('/event/create', [
+            EventController::class,
+            'create',
+        ]);
 
-        // Űrlap feldolgozása (POST)
-        $this->router->post(
-            '/event/create',
-            [\App\Controllers\EventController::class, 'store']
-        );
+        $this->router->post('/event/create', [
+            EventController::class,
+            'store',
+        ]);
+
+        $this->router->get('/event/{id}', [
+            EventController::class,
+            'show',
+        ]);
     }
 
     public function run(): void

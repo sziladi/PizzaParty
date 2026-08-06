@@ -27,16 +27,41 @@ class Router
     {
         $path = parse_url($uri, PHP_URL_PATH);
 
-        $handler = $this->routes[$method][$path] ?? null;
+        foreach ($this->routes[$method] as $route => $handler) {
 
-        if (!$handler) {
-            http_response_code(404);
-            echo '404 - Oldal nem található';
+            $pattern = preg_replace(
+                '#\{([a-zA-Z_][a-zA-Z0-9_]*)\}#',
+                '([^/]+)',
+                $route
+            );
+
+            $pattern = '#^' . $pattern . '$#';
+
+            if (!preg_match($pattern, $path, $matches)) {
+                continue;
+            }
+
+            array_shift($matches);
+
+            $this->invokeHandler($handler, $matches);
+
             return;
         }
 
+        http_response_code(404);
+
+        echo '404 - Oldal nem található';
+    }
+
+    private function invokeHandler(
+        callable|array $handler,
+        array $routeParameters = []
+    ): void {
+
         if (is_callable($handler)) {
-            $handler();
+
+            $handler(...$routeParameters);
+
             return;
         }
 
@@ -44,9 +69,14 @@ class Router
 
         $controllerInstance = new $controller();
 
-        $reflection = new ReflectionMethod($controllerInstance, $action);
+        $reflection = new ReflectionMethod(
+            $controllerInstance,
+            $action
+        );
 
         $arguments = [];
+
+        $routeIndex = 0;
 
         foreach ($reflection->getParameters() as $parameter) {
 
@@ -59,11 +89,27 @@ class Router
             switch ($type->getName()) {
 
                 case Request::class:
+
                     $arguments[] = new Request();
+
                     break;
 
                 case Response::class:
+
                     $arguments[] = new Response();
+
+                    break;
+
+                case 'int':
+
+                    $arguments[] = (int) $routeParameters[$routeIndex++];
+
+                    break;
+
+                case 'string':
+
+                    $arguments[] = $routeParameters[$routeIndex++];
+
                     break;
             }
         }

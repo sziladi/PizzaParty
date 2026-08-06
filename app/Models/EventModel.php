@@ -52,4 +52,23 @@ class EventModel
 
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function findById(int $id): ?array
+    {
+        $pdo = Database::connection();
+
+        $statement = $pdo->prepare(
+            'SELECT *
+             FROM events
+             WHERE id = :id'
+        );
+
+        $statement->execute([
+            'id' => $id,
+        ]);
+
+        $event = $statement->fetch(PDO::FETCH_ASSOC);
+
+        return $event ?: null;
+    }
 }
