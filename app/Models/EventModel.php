@@ -71,4 +71,32 @@ class EventModel
 
         return $event ?: null;
     }
+
+    public function update(
+        int $id,
+        string $eventName,
+        string $restaurantName,
+        string $menuUrl,
+        string $eventDate
+    ): void {
+        $pdo = Database::connection();
+
+        $statement = $pdo->prepare(
+            'UPDATE events
+             SET
+                event_name = :event_name,
+                restaurant_name = :restaurant_name,
+                menu_url = :menu_url,
+                event_date = :event_date
+             WHERE id = :id'
+        );
+
+        $statement->execute([
+            'id' => $id,
+            'event_name' => $eventName,
+            'restaurant_name' => $restaurantName,
+            'menu_url' => $menuUrl,
+            'event_date' => $eventDate,
+        ]);
+    }
 }

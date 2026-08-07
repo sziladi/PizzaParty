@@ -20,11 +20,13 @@ class Application
 
     private function registerRoutes(): void
     {
+        // Főoldal
         $this->router->get('/', [
             HomeController::class,
             'index',
         ]);
 
+        // Új esemény
         $this->router->get('/event/create', [
             EventController::class,
             'create',
@@ -35,9 +37,21 @@ class Application
             'store',
         ]);
 
+        // Esemény megtekintése
         $this->router->get('/event/{id}', [
             EventController::class,
             'show',
+        ]);
+
+        // Esemény szerkesztése
+        $this->router->get('/event/{id}/edit', [
+            EventController::class,
+            'edit',
+        ]);
+
+        $this->router->post('/event/{id}/edit', [
+            EventController::class,
+            'update',
         ]);
     }
 

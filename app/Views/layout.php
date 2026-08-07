@@ -15,9 +15,42 @@
 
 <body>
 
+<?php
+
+$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
+$isHome = $path === '/';
+$isCreate = $path === '/event/create';
+
+?>
+
 <header>
 
-    <h1>🍕 PizzaParty</h1>
+    <h1>
+        <a href="/">🍕 PizzaParty</a>
+    </h1>
+
+    <p>Jelentkezés, választás, rendelés – mindez egy helyen!</p>
+
+    <?php if (!$isHome): ?>
+
+        <nav>
+
+            <a class="button" href="/">🏠 Főoldal</a>
+
+            <?php if (!$isCreate): ?>
+
+                <a class="button" href="/event/create">
+
+                    ➕ Új pizzaest
+
+                </a>
+
+            <?php endif; ?>
+
+        </nav>
+
+    <?php endif; ?>
 
 </header>
 

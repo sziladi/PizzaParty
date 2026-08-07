@@ -25,8 +25,10 @@
 
 <p>
 
-    <a class="button" href="/">
-        ← Vissza a főoldalra
+    <a class="button" href="/event/<?= $event['id'] ?>/edit">
+
+        ✏️ Szerkesztés
+
     </a>
 
 </p>
