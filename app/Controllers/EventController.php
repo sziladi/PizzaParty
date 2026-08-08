@@ -25,27 +25,16 @@ class EventController
     {
         $eventModel = new EventModel();
 
-        $eventModel->create(
+        $eventId = $eventModel->create(
             (string) $request->input('event_name'),
             (string) $request->input('restaurant_name'),
             (string) $request->input('menu_url'),
             (string) $request->input('event_date')
         );
 
-        $html = '
-            <h2>Pizzaest sikeresen létrehozva!</h2>
+        header('Location: /event/' . $eventId);
 
-            <p>Az esemény bekerült az adatbázisba.</p>
-
-            <p>
-                <a class="button" href="/">Vissza a főoldalra</a>
-            </p>
-
-            <p>
-                <a class="button" href="/event/create">Új pizzaest létrehozása</a>
-            </p>';
-
-        $response->send($html);
+        exit;
     }
 
     public function show(int $id, Response $response): void
@@ -58,7 +47,9 @@ class EventController
 
             http_response_code(404);
 
-            $response->send('<h2>404 - Az esemény nem található.</h2>');
+            $response->send(
+                '<h2>404 - Az esemény nem található.</h2>'
+            );
 
             return;
         }
@@ -81,7 +72,9 @@ class EventController
 
             http_response_code(404);
 
-            $response->send('<h2>404 - Az esemény nem található.</h2>');
+            $response->send(
+                '<h2>404 - Az esemény nem található.</h2>'
+            );
 
             return;
         }
@@ -99,7 +92,6 @@ class EventController
         Request $request,
         Response $response
     ): void {
-
         $eventModel = new EventModel();
 
         $eventModel->update(

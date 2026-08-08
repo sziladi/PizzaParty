@@ -14,7 +14,7 @@ class EventModel
         string $restaurantName,
         string $menuUrl,
         string $eventDate
-    ): void {
+    ): int {
         $pdo = Database::connection();
 
         $statement = $pdo->prepare(
@@ -38,6 +38,8 @@ class EventModel
             'menu_url' => $menuUrl,
             'event_date' => $eventDate,
         ]);
+
+        return (int) $pdo->lastInsertId();
     }
 
     public function getAll(): array
