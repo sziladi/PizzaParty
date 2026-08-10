@@ -30,7 +30,7 @@ $isCreate = $path === '/event/create';
         <a href="/">🍕 PizzaParty</a>
     </h1>
 
-    <p>Jelentkezés, választás, rendelés – mindez egy helyen!</p>
+    <p>Jelentkezés, választás, rendelés leadása – mindez egy helyen!</p>
 
     <?php if (!$isHome): ?>
 

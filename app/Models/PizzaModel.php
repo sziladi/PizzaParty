@@ -14,9 +14,11 @@ class PizzaModel
         $pdo = Database::connection();
 
         $statement = $pdo->query(
-            'SELECT name FROM pizzas ORDER BY id'
+            'SELECT id, name, price
+             FROM pizzas
+             ORDER BY id'
         );
 
-        return $statement->fetchAll(PDO::FETCH_COLUMN);
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 }

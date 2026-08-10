@@ -6,6 +6,7 @@ namespace App\Core;
 
 use App\Controllers\EventController;
 use App\Controllers\HomeController;
+use App\Controllers\ParticipantController;
 
 class Application
 {
@@ -52,6 +53,12 @@ class Application
         $this->router->post('/event/{id}/edit', [
             EventController::class,
             'update',
+        ]);
+
+        // Jelentkezés pizzaestre
+        $this->router->post('/event/{id}/participate', [
+            ParticipantController::class,
+            'store',
         ]);
     }
 

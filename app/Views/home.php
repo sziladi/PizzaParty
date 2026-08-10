@@ -1,10 +1,6 @@
 <h2>🍕 PizzaParty</h2>
 
-<p>Tervezd meg a következő pizzaestedet!</p>
-
-<p>
-    <a class="button" href="/event/create">➕ Új pizzaest létrehozása</a>
-</p>
+<p>Jelentkezés, Választás, Rendelés - Mindez egy helyen!</p>
 
 <h3>Közelgő pizzaestek</h3>
 
@@ -16,19 +12,30 @@
 
     <?php foreach ($events as $event): ?>
 
-        <article class="event-card">
+        <article class="event-card event-card-clickable">
 
-            <h4><?= htmlspecialchars($event['event_name']) ?></h4>
+            <a
+                href="/event/<?= (int) $event['id'] ?>"
+                class="event-card-link"
+            >
 
-            <p>
-                📍
-                <strong><?= htmlspecialchars($event['restaurant_name']) ?></strong>
-            </p>
+                <h4>
+                    <?= htmlspecialchars($event['event_name']) ?>
+                </h4>
 
-            <p>
-                📅
-                <?= htmlspecialchars($event['event_date']) ?>
-            </p>
+                <p>
+                    📍
+                    <strong>
+                        <?= htmlspecialchars($event['restaurant_name']) ?>
+                    </strong>
+                </p>
+
+                <p>
+                    📅
+                    <?= htmlspecialchars($event['event_date']) ?>
+                </p>
+
+            </a>
 
             <p>
                 <a
