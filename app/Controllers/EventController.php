@@ -9,6 +9,7 @@ use App\Core\Request;
 use App\Core\Response;
 use App\Core\View;
 use App\Models\EventModel;
+use App\Models\ParticipantModel;
 
 class EventController
 {
@@ -40,6 +41,7 @@ class EventController
     public function show(int $id, Response $response): void
     {
         $eventModel = new EventModel();
+        $participantModel = new ParticipantModel();
 
         $event = $eventModel->findById($id);
 
@@ -54,9 +56,12 @@ class EventController
             return;
         }
 
+        $participants = $participantModel->getByEventId($id);
+
         $html = View::render('event/show', [
             'title' => $event['event_name'],
             'event' => $event,
+            'participants' => $participants,
         ]);
 
         $response->send($html);

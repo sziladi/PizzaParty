@@ -1,5 +1,11 @@
 <h2>Közelgő pizzaestek</h2>
 
+<p>
+    <a class="button" href="/event/create">
+        ➕ Új pizzaest
+    </a>
+</p>
+
 <?php if (empty($events)): ?>
 
     <p>Még nincs létrehozott pizzaest.</p>

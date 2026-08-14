@@ -11,24 +11,28 @@ class ParticipantModel
 {
     public function create(
         int $eventId,
-        string $name
+        string $name,
+        string $pizzaChoice
     ): int {
         $pdo = Database::connection();
 
         $statement = $pdo->prepare(
             'INSERT INTO participants (
                 event_id,
-                name
+                name,
+                pizza_choice
             )
             VALUES (
                 :event_id,
-                :name
+                :name,
+                :pizza_choice
             )'
         );
 
         $statement->execute([
             'event_id' => $eventId,
             'name' => $name,
+            'pizza_choice' => $pizzaChoice,
         ]);
 
         return (int) $pdo->lastInsertId();
@@ -39,7 +43,12 @@ class ParticipantModel
         $pdo = Database::connection();
 
         $statement = $pdo->prepare(
-            'SELECT id, event_id, name, created_at
+            'SELECT
+                id,
+                event_id,
+                name,
+                pizza_choice,
+                created_at
              FROM participants
              WHERE event_id = :event_id
              ORDER BY name'
@@ -57,7 +66,12 @@ class ParticipantModel
         $pdo = Database::connection();
 
         $statement = $pdo->prepare(
-            'SELECT id, event_id, name, created_at
+            'SELECT
+                id,
+                event_id,
+                name,
+                pizza_choice,
+                created_at
              FROM participants
              WHERE id = :id'
         );

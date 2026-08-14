@@ -19,12 +19,27 @@ class ParticipantController
     ): void {
         $name = trim((string) $request->input('name'));
 
-        // Üres név ellenőrzése
+        $pizzaChoice = trim(
+            (string) $request->input('pizza_choice')
+        );
+
+        // Név ellenőrzése
         if ($name === '') {
             http_response_code(400);
 
             $response->send(
                 '<h2>Hiba</h2><p>A név megadása kötelező.</p>'
+            );
+
+            return;
+        }
+
+        // Pizzaigény ellenőrzése
+        if ($pizzaChoice === '') {
+            http_response_code(400);
+
+            $response->send(
+                '<h2>Hiba</h2><p>A pizza megadása kötelező.</p>'
             );
 
             return;
@@ -48,22 +63,31 @@ class ParticipantController
         $participantModel = new ParticipantModel();
 
         try {
+
             $participantId = $participantModel->create(
                 $eventId,
-                $name
+                $name,
+                $pizzaChoice
             );
+
         } catch (\PDOException $exception) {
 
-            // Duplicate név ugyanazon a pizzaesten
-            if ((int) $exception->errorInfo[1] === 1062) {
+            // Duplikált jelentkezés
+            if (
+                isset($exception->errorInfo[1]) &&
+                (int) $exception->errorInfo[1] === 1062
+            ) {
 
                 http_response_code(409);
 
-                $html = View::render('participant/duplicate', [
-                    'title' => 'Már jelentkeztél',
-                    'event' => $event,
-                    'name' => $name,
-                ]);
+                $html = View::render(
+                    'participant/duplicate',
+                    [
+                        'title' => 'Már jelentkeztél',
+                        'event' => $event,
+                        'name' => $name,
+                    ]
+                );
 
                 $response->send($html);
 
@@ -74,11 +98,14 @@ class ParticipantController
         }
 
         // Sikeres jelentkezés
-        $html = View::render('participant/success', [
-            'title' => 'Sikeres jelentkezés',
-            'event' => $event,
-            'name' => $name,
-        ]);
+        $html = View::render(
+            'participant/success',
+            [
+                'title' => 'Sikeres jelentkezés',
+                'event' => $event,
+                'name' => $name,
+            ]
+        );
 
         $response->send($html);
     }

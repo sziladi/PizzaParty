@@ -29,6 +29,43 @@
 
 <div class="event-card">
 
+    <h3>👥 Jelentkezők</h3>
+
+    <?php if (empty($participants)): ?>
+
+        <p>
+            Még senki nem jelentkezett erre a pizzaestre.
+        </p>
+
+    <?php else: ?>
+
+        <ul>
+
+            <?php foreach ($participants as $participant): ?>
+
+                <li>
+
+                    <strong>
+                        <?= htmlspecialchars($participant['name']) ?>
+                    </strong>
+
+                    <br>
+
+                    🍕
+                    <?= htmlspecialchars($participant['pizza_choice']) ?>
+
+                </li>
+
+            <?php endforeach; ?>
+
+        </ul>
+
+    <?php endif; ?>
+
+</div>
+
+<div class="event-card">
+
     <h3>👤 Jelentkezés</h3>
 
     <form
@@ -50,6 +87,23 @@
                 maxlength="100"
                 required
             >
+        </p>
+
+        <p>
+            <label for="pizza_choice">
+                Milyen pizzát szeretnél?
+            </label>
+        </p>
+
+        <p>
+            <textarea
+                id="pizza_choice"
+                name="pizza_choice"
+                maxlength="255"
+                rows="3"
+                required
+                placeholder="Pl. 1 Margherita, 1 Frutti di Mare"
+            ></textarea>
         </p>
 
         <button class="button" type="submit">

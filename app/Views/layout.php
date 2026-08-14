@@ -34,23 +34,15 @@ $isCreate = $path === '/event/create';
 
     <?php if (!$isHome): ?>
 
-        <nav>
+    <nav>
 
-            <a class="button" href="/">🏠 Főoldal</a>
+        <a class="button" href="/">
+            🏠 Főoldal
+        </a>
 
-            <?php if (!$isCreate): ?>
+    </nav>
 
-                <a class="button" href="/event/create">
-
-                    ➕ Új pizzaest
-
-                </a>
-
-            <?php endif; ?>
-
-        </nav>
-
-    <?php endif; ?>
+<?php endif; ?>
 
 </header>
 
