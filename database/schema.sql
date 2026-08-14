@@ -1,12 +1,31 @@
-CREATE TABLE pizzas (
+CREATE TABLE IF NOT EXISTS events (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
+    event_name VARCHAR(150) NOT NULL,
+    restaurant_name VARCHAR(150) NOT NULL,
+    menu_url VARCHAR(500) NOT NULL,
+    event_date DATE NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE pizzas (
+CREATE TABLE IF NOT EXISTS pizzas (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     price DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS participants (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    event_id INT UNSIGNED NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    pizza_choice VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    UNIQUE KEY unique_event_participant (event_id, name),
+
+    CONSTRAINT fk_participants_event
+        FOREIGN KEY (event_id)
+        REFERENCES events(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
 );
