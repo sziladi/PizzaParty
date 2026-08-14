@@ -27,3 +27,38 @@ body{
     color:var(--text);
     font-family:"Segoe UI",Arial,sans-serif;
 }
+
+body{
+    position:relative;
+}
+
+body{
+    position:relative;
+}
+
+body{
+    position:relative;
+}
+
+body::before{
+    content:"";
+
+    position:fixed;
+    inset:0;
+
+    background-image:url('/images/pizza-background.png');
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+
+    opacity:.40;
+
+    pointer-events:none;
+
+    z-index:0;
+}
+
+body > *{
+    position:relative;
+    z-index:1;
+}

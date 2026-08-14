@@ -1,8 +1,4 @@
-<h2>🍕 PizzaParty</h2>
-
-<p>Jelentkezés, Választás, Rendelés - Mindez egy helyen!</p>
-
-<h3>Közelgő pizzaestek</h3>
+<h2>Közelgő pizzaestek</h2>
 
 <?php if (empty($events)): ?>
 
