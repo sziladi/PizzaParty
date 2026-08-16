@@ -20,8 +20,10 @@
         <a
             href="<?= htmlspecialchars($event['menu_url']) ?>"
             target="_blank"
+            rel="noopener noreferrer"
         >
             🍕 <?= htmlspecialchars($event['restaurant_name']) ?> étlapja
+            <em>(új lapon nyílik meg)</em>
         </a>
     </p>
 
@@ -102,7 +104,7 @@
                 maxlength="255"
                 rows="3"
                 required
-                placeholder="Pl. 1 Margherita, 1 Frutti di Mare"
+                placeholder="Pl. 1 Margherita, 1 Húshegy"
             ></textarea>
         </p>
 
