@@ -2,12 +2,15 @@
 
 declare(strict_types=1);
 
+session_start();
+
 require_once __DIR__ . '/../app/Core/Router.php';
 require_once __DIR__ . '/../app/Core/Request.php';
 require_once __DIR__ . '/../app/Core/Response.php';
 require_once __DIR__ . '/../app/Core/View.php';
 require_once __DIR__ . '/../app/Core/Config.php';
 require_once __DIR__ . '/../app/Core/Database.php';
+require_once __DIR__ . '/../app/Core/OrganizerAuth.php';
 require_once __DIR__ . '/../app/Core/Application.php';
 
 require_once __DIR__ . '/../app/Models/PizzaModel.php';
@@ -17,6 +20,7 @@ require_once __DIR__ . '/../app/Models/ParticipantModel.php';
 require_once __DIR__ . '/../app/Controllers/HomeController.php';
 require_once __DIR__ . '/../app/Controllers/EventController.php';
 require_once __DIR__ . '/../app/Controllers/ParticipantController.php';
+require_once __DIR__ . '/../app/Controllers/OrganizerController.php';
 
 use App\Core\Application;
 

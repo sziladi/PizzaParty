@@ -1,10 +1,14 @@
 <h2>Közelgő pizzaestek</h2>
 
-<p>
-    <a class="button" href="/event/create">
-        ➕ Új pizzaest
-    </a>
-</p>
+<?php if ($organizerLoggedIn): ?>
+
+    <p>
+        <a class="button" href="/event/create">
+            ➕ Új pizzaest
+        </a>
+    </p>
+
+<?php endif; ?>
 
 <?php if (empty($events)): ?>
 

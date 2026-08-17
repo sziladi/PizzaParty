@@ -116,11 +116,15 @@
 
 </div>
 
-<p>
-    <a
-        class="button"
-        href="/event/<?= (int) $event['id'] ?>/edit"
-    >
-        ✏️ Szerkesztés
-    </a>
-</p>
+<?php if (\App\Core\OrganizerAuth::isLoggedIn()): ?>
+
+    <p>
+        <a
+            class="button"
+            href="/event/<?= (int) $event['id'] ?>/edit"
+        >
+            ✏️ Szerkesztés
+        </a>
+    </p>
+
+<?php endif; ?>

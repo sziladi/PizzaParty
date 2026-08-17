@@ -28,6 +28,7 @@ services:
 
     environment:
       TZ: ${TZ}
+      ORGANIZER_PASSWORD_HASH: ${ORGANIZER_PASSWORD_HASH}
 
     depends_on:
       - mysql

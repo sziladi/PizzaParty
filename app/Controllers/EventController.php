@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Core\Config;
+use App\Core\OrganizerAuth;
 use App\Core\Request;
 use App\Core\Response;
 use App\Core\View;
@@ -15,6 +16,8 @@ class EventController
 {
     public function create(Response $response): void
     {
+        OrganizerAuth::requireLogin();
+
         $html = View::render('event/create', [
             'title' => Config::get('app', 'name') . ' - Új esemény'
         ]);
@@ -24,6 +27,8 @@ class EventController
 
     public function store(Request $request, Response $response): void
     {
+        OrganizerAuth::requireLogin();
+
         $eventModel = new EventModel();
 
         $eventId = $eventModel->create(
@@ -69,6 +74,8 @@ class EventController
 
     public function edit(int $id, Response $response): void
     {
+        OrganizerAuth::requireLogin();
+
         $eventModel = new EventModel();
 
         $event = $eventModel->findById($id);
@@ -97,6 +104,8 @@ class EventController
         Request $request,
         Response $response
     ): void {
+        OrganizerAuth::requireLogin();
+
         $eventModel = new EventModel();
 
         $eventModel->update(
@@ -109,9 +118,14 @@ class EventController
 
         $event = $eventModel->findById($id);
 
+        $participantModel = new ParticipantModel();
+
+        $participants = $participantModel->getByEventId($id);
+
         $html = View::render('event/show', [
             'title' => $event['event_name'],
             'event' => $event,
+            'participants' => $participants,
         ]);
 
         $response->send($html);

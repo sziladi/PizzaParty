@@ -7,6 +7,7 @@ namespace App\Core;
 use App\Controllers\EventController;
 use App\Controllers\HomeController;
 use App\Controllers\ParticipantController;
+use App\Controllers\OrganizerController;
 
 class Application
 {
@@ -17,6 +18,21 @@ class Application
         $this->router = new Router();
 
         $this->registerRoutes();
+        // Szervezői belépés
+$this->router->get('/login', [
+    OrganizerController::class,
+    'login',
+]);
+
+$this->router->post('/login', [
+    OrganizerController::class,
+    'authenticate',
+]);
+
+$this->router->get('/logout', [
+    OrganizerController::class,
+    'logout',
+]);
     }
 
     private function registerRoutes(): void
