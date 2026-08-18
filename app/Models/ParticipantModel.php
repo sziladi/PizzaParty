@@ -84,4 +84,20 @@ class ParticipantModel
 
         return $participant ?: null;
     }
+
+    public function delete(int $id): bool
+    {
+        $pdo = Database::connection();
+
+        $statement = $pdo->prepare(
+            'DELETE FROM participants
+             WHERE id = :id'
+        );
+
+        $statement->execute([
+            'id' => $id,
+        ]);
+
+        return $statement->rowCount() > 0;
+    }
 }

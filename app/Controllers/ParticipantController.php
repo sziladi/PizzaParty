@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
+use App\Core\OrganizerAuth;
 use App\Core\Request;
 use App\Core\Response;
 use App\Core\View;
@@ -108,5 +109,34 @@ class ParticipantController
         );
 
         $response->send($html);
+    }
+
+    public function delete(
+        int $id,
+        Response $response
+    ): void {
+        OrganizerAuth::requireLogin();
+
+        $participantModel = new ParticipantModel();
+
+        $participant = $participantModel->findById($id);
+
+        if ($participant === null) {
+            http_response_code(404);
+
+            $response->send(
+                '<h2>404 - A résztvevő nem található.</h2>'
+            );
+
+            return;
+        }
+
+        $eventId = (int) $participant['event_id'];
+
+        $participantModel->delete($id);
+
+        header('Location: /event/' . $eventId);
+
+        exit;
     }
 }

@@ -18,21 +18,6 @@ class Application
         $this->router = new Router();
 
         $this->registerRoutes();
-        // Szervezői belépés
-$this->router->get('/login', [
-    OrganizerController::class,
-    'login',
-]);
-
-$this->router->post('/login', [
-    OrganizerController::class,
-    'authenticate',
-]);
-
-$this->router->get('/logout', [
-    OrganizerController::class,
-    'logout',
-]);
     }
 
     private function registerRoutes(): void
@@ -41,6 +26,22 @@ $this->router->get('/logout', [
         $this->router->get('/', [
             HomeController::class,
             'index',
+        ]);
+
+        // Szervezői belépés
+        $this->router->get('/login', [
+            OrganizerController::class,
+            'login',
+        ]);
+
+        $this->router->post('/login', [
+            OrganizerController::class,
+            'authenticate',
+        ]);
+
+        $this->router->get('/logout', [
+            OrganizerController::class,
+            'logout',
         ]);
 
         // Új esemény
@@ -76,6 +77,18 @@ $this->router->get('/logout', [
             ParticipantController::class,
             'store',
         ]);
+
+        // Résztvevő törlése
+        $this->router->post('/participant/{id}/delete', [
+            ParticipantController::class,
+            'delete',
+        ]);
+
+        // Pizzaest törlése
+        $this->router->post('/event/{id}/delete', [
+            EventController::class,
+            'delete',
+]);
     }
 
     public function run(): void

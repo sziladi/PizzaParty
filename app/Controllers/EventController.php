@@ -130,4 +130,32 @@ class EventController
 
         $response->send($html);
     }
+
+    public function delete(
+        int $id,
+        Response $response
+    ): void {
+        OrganizerAuth::requireLogin();
+
+        $eventModel = new EventModel();
+
+        $event = $eventModel->findById($id);
+
+        if ($event === null) {
+
+            http_response_code(404);
+
+            $response->send(
+                '<h2>404 - A pizzaest nem található.</h2>'
+            );
+
+            return;
+        }
+
+        $eventModel->delete($id);
+
+        header('Location: /');
+
+        exit;
+    }
 }

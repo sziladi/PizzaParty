@@ -56,6 +56,26 @@
                     🍕
                     <?= htmlspecialchars($participant['pizza_choice']) ?>
 
+                    <?php if (\App\Core\OrganizerAuth::isLoggedIn()): ?>
+
+                        <form
+                            method="post"
+                            action="/participant/<?= (int) $participant['id'] ?>/delete"
+                            style="display: inline;"
+                            onsubmit="return confirm('Biztosan törölni szeretnéd ezt a résztvevőt?');"
+                        >
+
+                            <button
+                                class="button"
+                                type="submit"
+                            >
+                                🗑️ Törlés
+                            </button>
+
+                        </form>
+
+                    <?php endif; ?>
+
                 </li>
 
             <?php endforeach; ?>
@@ -119,12 +139,29 @@
 <?php if (\App\Core\OrganizerAuth::isLoggedIn()): ?>
 
     <p>
+
         <a
             class="button"
             href="/event/<?= (int) $event['id'] ?>/edit"
         >
             ✏️ Szerkesztés
         </a>
+
     </p>
+
+    <form
+        method="post"
+        action="/event/<?= (int) $event['id'] ?>/delete"
+        onsubmit="return confirm('Biztosan törölni szeretnéd ezt a pizzaestet? A hozzá tartozó jelentkezők is törlődnek.');"
+    >
+
+        <button
+            class="button"
+            type="submit"
+        >
+            🗑️ Pizzaest törlése
+        </button>
+
+    </form>
 
 <?php endif; ?>
