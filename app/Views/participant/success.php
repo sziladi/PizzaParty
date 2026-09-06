@@ -16,6 +16,27 @@
     </p>
 
     <p>
+        Ha később módosítani szeretnéd a jelentkezésedet,
+        használd ezt a linket:
+    </p>
+
+    <p>
+        <a
+            class="button"
+            href="/participant/edit?token=<?= urlencode($edit_token) ?>"
+        >
+            ✏️ Jelentkezés módosítása
+        </a>
+    </p>
+
+    <p>
+        <small>
+            Ezt a linket érdemes elmentened, mert ezzel tudod
+            később módosítani a saját jelentkezésedet.
+        </small>
+    </p>
+
+    <p>
         <a
             class="button"
             href="/"

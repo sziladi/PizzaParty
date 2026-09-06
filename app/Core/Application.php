@@ -78,6 +78,17 @@ class Application
             'store',
         ]);
 
+        // Jelentkezés módosítása
+        $this->router->get('/participant/edit', [
+            ParticipantController::class,
+            'edit',
+        ]);
+
+        $this->router->post('/participant/edit', [
+            ParticipantController::class,
+            'update',
+        ]);
+
         // Résztvevő törlése
         $this->router->post('/participant/{id}/delete', [
             ParticipantController::class,
@@ -88,7 +99,7 @@ class Application
         $this->router->post('/event/{id}/delete', [
             EventController::class,
             'delete',
-]);
+        ]);
     }
 
     public function run(): void
