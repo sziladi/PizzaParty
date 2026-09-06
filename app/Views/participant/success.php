@@ -15,26 +15,32 @@
         Várunk a pizzaesten! 🍕
     </p>
 
-    <p>
-        Ha később módosítani szeretnéd a jelentkezésedet,
-        használd ezt a linket:
-    </p>
+    <div class="event-card">
 
-    <p>
-        <a
-            class="button"
-            href="/participant/edit?token=<?= urlencode($edit_token) ?>"
-        >
-            ✏️ Jelentkezés módosítása
-        </a>
-    </p>
+        <h3>🔐 Módosító kódod</h3>
 
-    <p>
-        <small>
-            Ezt a linket érdemes elmentened, mert ezzel tudod
-            később módosítani a saját jelentkezésedet.
-        </small>
-    </p>
+        <p>
+            Ezt a kódot mentsd el!
+            Később a PizzaParty főoldalán ezzel tudod
+            megnyitni és módosítani a jelentkezésedet.
+        </p>
+
+        <p>
+            <code>
+                <?= htmlspecialchars($edit_token) ?>
+            </code>
+        </p>
+
+        <p>
+            <a
+                class="button"
+                href="/participant/edit?token=<?= urlencode($edit_token) ?>"
+            >
+                ✏️ Jelentkezés módosítása
+            </a>
+        </p>
+
+    </div>
 
     <p>
         <a
