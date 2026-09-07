@@ -13,12 +13,19 @@ use App\Models\ParticipantModel;
 
 class ParticipantController
 {
+    private function isModificationClosed(array $event): bool
+    {
+        return $event['event_date'] <= date('Y-m-d');
+    }
+
     public function store(
         int $eventId,
         Request $request,
         Response $response
     ): void {
-        $name = trim((string) $request->input('name'));
+        $name = trim(
+            (string) $request->input('name')
+        );
 
         $pizzaChoice = trim(
             (string) $request->input('pizza_choice')
@@ -48,7 +55,9 @@ class ParticipantController
 
         $eventModel = new EventModel();
 
-        $event = $eventModel->findById($eventId);
+        $event = $eventModel->findById(
+            $eventId
+        );
 
         // Ellenőrizzük, hogy létezik-e a pizzaest
         if ($event === null) {
@@ -64,13 +73,11 @@ class ParticipantController
         $participantModel = new ParticipantModel();
 
         try {
-
             $participant = $participantModel->create(
                 $eventId,
                 $name,
                 $pizzaChoice
             );
-
         } catch (\PDOException $exception) {
 
             // Duplikált jelentkezés
@@ -78,7 +85,6 @@ class ParticipantController
                 isset($exception->errorInfo[1]) &&
                 (int) $exception->errorInfo[1] === 1062
             ) {
-
                 http_response_code(409);
 
                 $html = View::render(
@@ -166,6 +172,21 @@ class ParticipantController
             return;
         }
 
+        // Módosítási határidő ellenőrzése
+        if ($this->isModificationClosed($event)) {
+            http_response_code(403);
+
+            $response->send(
+                '<h2>🔒 A jelentkezés módosítása lezárult.</h2>' .
+                '<p>' .
+                'Ennek a pizzaestnek a napja már elkezdődött, ' .
+                'ezért a jelentkezés már nem módosítható.' .
+                '</p>'
+            );
+
+            return;
+        }
+
         // Módosító űrlap megjelenítése
         $html = View::render(
             'participant/edit',
@@ -246,14 +267,45 @@ class ParticipantController
             return;
         }
 
-        try {
+        // A pizzaest adatainak lekérése
+        $eventModel = new EventModel();
 
+        $event = $eventModel->findById(
+            (int) $participant['event_id']
+        );
+
+        // Pizzaest nem található
+        if ($event === null) {
+            http_response_code(404);
+
+            $response->send(
+                '<h2>404 - A pizzaest nem található.</h2>'
+            );
+
+            return;
+        }
+
+        // Módosítási határidő ellenőrzése
+        if ($this->isModificationClosed($event)) {
+            http_response_code(403);
+
+            $response->send(
+                '<h2>🔒 A jelentkezés módosítása lezárult.</h2>' .
+                '<p>' .
+                'Ennek a pizzaestnek a napja már elkezdődött, ' .
+                'ezért a jelentkezés már nem módosítható.' .
+                '</p>'
+            );
+
+            return;
+        }
+
+        try {
             $participantModel->updateByEditToken(
                 $editToken,
                 $name,
                 $pizzaChoice
             );
-
         } catch (\PDOException $exception) {
 
             // A név már szerepel az adott pizzaesten
@@ -274,13 +326,19 @@ class ParticipantController
             throw $exception;
         }
 
-        // Vissza az esemény oldalára
-        header(
-            'Location: /event/' .
-            (int) $participant['event_id']
+        // Sikeres módosítás
+        $html = View::render(
+            'participant/success',
+            [
+                'title' => 'Jelentkezés módosítva',
+                'event' => $event,
+                'name' => $name,
+                'edit_token' => $editToken,
+                'updated' => true,
+            ]
         );
 
-        exit;
+        $response->send($html);
     }
 
     public function delete(
@@ -291,7 +349,9 @@ class ParticipantController
 
         $participantModel = new ParticipantModel();
 
-        $participant = $participantModel->findById($id);
+        $participant = $participantModel->findById(
+            $id
+        );
 
         if ($participant === null) {
             http_response_code(404);
@@ -307,7 +367,9 @@ class ParticipantController
 
         $participantModel->delete($id);
 
-        header('Location: /event/' . $eventId);
+        header(
+            'Location: /event/' . $eventId
+        );
 
         exit;
     }
