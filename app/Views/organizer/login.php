@@ -12,6 +12,12 @@
 
     <form method="post" action="/login">
 
+        <input
+            type="hidden"
+            name="csrf_token"
+            value="<?= htmlspecialchars(\App\Core\Csrf::token()) ?>"
+        >
+
         <p>
             <label for="password">
                 Jelszó:
