@@ -2,6 +2,12 @@
 
 <form method="post" action="/event/create">
 
+    <input
+        type="hidden"
+        name="csrf_token"
+        value="<?= htmlspecialchars(\App\Core\Csrf::token()) ?>"
+    >
+
     <p>
         <label>Esemény neve</label><br>
         <input type="text" name="event_name">

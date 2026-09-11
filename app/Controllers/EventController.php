@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Core\Config;
+use App\Core\Csrf;
 use App\Core\OrganizerAuth;
 use App\Core\Request;
 use App\Core\Response;
@@ -25,9 +26,24 @@ class EventController
         $response->send($html);
     }
 
-    public function store(Request $request, Response $response): void
-    {
+    public function store(
+        Request $request,
+        Response $response
+    ): void {
         OrganizerAuth::requireLogin();
+
+        $csrfToken = (string) $request->input('csrf_token');
+
+        if (!Csrf::validate($csrfToken)) {
+            http_response_code(403);
+
+            $response->send(
+                '<h2>403 - Érvénytelen kérés.</h2>' .
+                '<p>A biztonsági token érvénytelen vagy hiányzik.</p>'
+            );
+
+            return;
+        }
 
         $eventModel = new EventModel();
 
@@ -43,15 +59,16 @@ class EventController
         exit;
     }
 
-    public function show(int $id, Response $response): void
-    {
+    public function show(
+        int $id,
+        Response $response
+    ): void {
         $eventModel = new EventModel();
         $participantModel = new ParticipantModel();
 
         $event = $eventModel->findById($id);
 
         if ($event === null) {
-
             http_response_code(404);
 
             $response->send(
@@ -72,8 +89,10 @@ class EventController
         $response->send($html);
     }
 
-    public function edit(int $id, Response $response): void
-    {
+    public function edit(
+        int $id,
+        Response $response
+    ): void {
         OrganizerAuth::requireLogin();
 
         $eventModel = new EventModel();
@@ -81,7 +100,6 @@ class EventController
         $event = $eventModel->findById($id);
 
         if ($event === null) {
-
             http_response_code(404);
 
             $response->send(
@@ -142,7 +160,6 @@ class EventController
         $event = $eventModel->findById($id);
 
         if ($event === null) {
-
             http_response_code(404);
 
             $response->send(
