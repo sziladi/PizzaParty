@@ -1,6 +1,12 @@
 <h2>Pizzaest szerkesztése</h2>
 
-<form method="post" action="/event/<?= $event['id'] ?>/edit">
+<form method="post" action="/event/<?= (int) $event['id'] ?>/edit">
+
+    <input
+        type="hidden"
+        name="csrf_token"
+        value="<?= htmlspecialchars(\App\Core\Csrf::token()) ?>"
+    >
 
     <p>
         <label>Esemény neve</label><br>
@@ -43,9 +49,7 @@
     </p>
 
     <button class="button" type="submit">
-
         💾 Mentés
-
     </button>
 
 </form>

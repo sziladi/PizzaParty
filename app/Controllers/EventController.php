@@ -124,6 +124,19 @@ class EventController
     ): void {
         OrganizerAuth::requireLogin();
 
+        $csrfToken = (string) $request->input('csrf_token');
+
+        if (!Csrf::validate($csrfToken)) {
+            http_response_code(403);
+
+            $response->send(
+                '<h2>403 - Érvénytelen kérés.</h2>' .
+                '<p>A biztonsági token érvénytelen vagy hiányzik.</p>'
+            );
+
+            return;
+        }
+
         $eventModel = new EventModel();
 
         $eventModel->update(
