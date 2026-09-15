@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
+use App\Core\Csrf;
 use App\Core\OrganizerAuth;
 use App\Core\Request;
 use App\Core\Response;
@@ -23,6 +24,18 @@ class ParticipantController
         Request $request,
         Response $response
     ): void {
+        $csrfToken = (string) $request->input('csrf_token');
+
+if (!Csrf::validate($csrfToken)) {
+    http_response_code(403);
+
+    $response->send(
+        '<h2>403 - Érvénytelen kérés.</h2>' .
+        '<p>A biztonsági token érvénytelen vagy hiányzik.</p>'
+    );
+
+    return;
+}
         $name = trim(
             (string) $request->input('name')
         );
@@ -342,12 +355,26 @@ class ParticipantController
     }
 
     public function delete(
-        int $id,
-        Response $response
-    ): void {
-        OrganizerAuth::requireLogin();
+    int $id,
+    Request $request,
+    Response $response
+): void {
+    OrganizerAuth::requireLogin();
 
-        $participantModel = new ParticipantModel();
+    $csrfToken = (string) $request->input('csrf_token');
+
+    if (!Csrf::validate($csrfToken)) {
+        http_response_code(403);
+
+        $response->send(
+            '<h2>403 - Érvénytelen kérés.</h2>' .
+            '<p>A biztonsági token érvénytelen vagy hiányzik.</p>'
+        );
+
+        return;
+    }
+
+    $participantModel = new ParticipantModel();
 
         $participant = $participantModel->findById(
             $id

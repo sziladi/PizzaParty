@@ -65,6 +65,12 @@
                             onsubmit="return confirm('Biztosan törölni szeretnéd ezt a résztvevőt?');"
                         >
 
+                            <input
+                                type="hidden"
+                                name="csrf_token"
+                                value="<?= htmlspecialchars(\App\Core\Csrf::token()) ?>"
+                            >
+
                             <button
                                 class="button"
                                 type="submit"
@@ -94,6 +100,12 @@
         method="post"
         action="/event/<?= (int) $event['id'] ?>/participate"
     >
+
+        <input
+            type="hidden"
+            name="csrf_token"
+            value="<?= htmlspecialchars(\App\Core\Csrf::token()) ?>"
+        >
 
         <p>
             <label for="name">
@@ -154,6 +166,12 @@
         action="/event/<?= (int) $event['id'] ?>/delete"
         onsubmit="return confirm('Biztosan törölni szeretnéd ezt a pizzaestet? A hozzá tartozó jelentkezők is törlődnek.');"
     >
+
+        <input
+            type="hidden"
+            name="csrf_token"
+            value="<?= htmlspecialchars(\App\Core\Csrf::token()) ?>"
+        >
 
         <button
             class="button"

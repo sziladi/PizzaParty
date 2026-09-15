@@ -16,6 +16,7 @@ class OrganizerController
     {
         if (OrganizerAuth::isLoggedIn()) {
             header('Location: /');
+
             exit;
         }
 
@@ -62,8 +63,23 @@ class OrganizerController
         exit;
     }
 
-    public function logout(Response $response): void
-    {
+    public function logout(
+        Request $request,
+        Response $response
+    ): void {
+        $csrfToken = (string) $request->input('csrf_token');
+
+        if (!Csrf::validate($csrfToken)) {
+            http_response_code(403);
+
+            $response->send(
+                '<h2>403 - Érvénytelen kérés.</h2>' .
+                '<p>A biztonsági token érvénytelen vagy hiányzik.</p>'
+            );
+
+            return;
+        }
+
         OrganizerAuth::logout();
 
         header('Location: /');

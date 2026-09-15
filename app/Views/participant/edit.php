@@ -13,6 +13,12 @@
 
         <input
             type="hidden"
+            name="csrf_token"
+            value="<?= htmlspecialchars(\App\Core\Csrf::token()) ?>"
+        >
+
+        <input
+            type="hidden"
             name="token"
             value="<?= htmlspecialchars($edit_token) ?>"
         >

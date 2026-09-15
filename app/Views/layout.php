@@ -1,15 +1,27 @@
 <!DOCTYPE html>
 <html lang="hu">
-
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <title><?= htmlspecialchars($title ?? 'PizzaParty') ?></title>
+<title>
+    <?= htmlspecialchars($title ?? 'PizzaParty') ?>
+</title>
 
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/layout.css">
-    <link rel="stylesheet" href="/css/components.css">
+<link
+    rel="stylesheet"
+    href="/css/style.css"
+>
+
+<link
+    rel="stylesheet"
+    href="/css/layout.css"
+>
+
+<link
+    rel="stylesheet"
+    href="/css/components.css"
+>
 
 </head>
 
@@ -19,7 +31,10 @@
 
 use App\Core\OrganizerAuth;
 
-$path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+$path = parse_url(
+    $_SERVER['REQUEST_URI'] ?? '/',
+    PHP_URL_PATH
+);
 
 $isHome = $path === '/';
 
@@ -30,16 +45,23 @@ $organizerLoggedIn = OrganizerAuth::isLoggedIn();
 <header>
 
     <h1>
-        <a href="/">🍕 PizzaParty</a>
+        <a href="/">
+            🍕 PizzaParty
+        </a>
     </h1>
 
-    <p>Jelentkezés, választás – mindez egy helyen!</p>
+    <p>
+        Jelentkezés, választás – mindez egy helyen!
+    </p>
 
     <nav>
 
         <?php if (!$isHome): ?>
 
-            <a class="button" href="/">
+            <a
+                class="button"
+                href="/"
+            >
                 🏠 Főoldal
             </a>
 
@@ -47,13 +69,33 @@ $organizerLoggedIn = OrganizerAuth::isLoggedIn();
 
         <?php if ($organizerLoggedIn): ?>
 
-            <a class="button" href="/logout">
-                🚪 Kijelentkezés
-            </a>
+            <form
+                method="post"
+                action="/logout"
+                style="display: inline;"
+            >
+
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="<?= htmlspecialchars(\App\Core\Csrf::token()) ?>"
+                >
+
+                <button
+                    class="button"
+                    type="submit"
+                >
+                    🚪 Kijelentkezés
+                </button>
+
+            </form>
 
         <?php else: ?>
 
-            <a class="button" href="/login">
+            <a
+                class="button"
+                href="/login"
+            >
                 🔐 Szervezői belépés
             </a>
 
@@ -65,7 +107,7 @@ $organizerLoggedIn = OrganizerAuth::isLoggedIn();
 
 <main>
 
-<?= $content ?>
+    <?= $content ?>
 
 </main>
 

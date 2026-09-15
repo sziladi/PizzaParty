@@ -39,7 +39,8 @@ class Application
             'authenticate',
         ]);
 
-        $this->router->get('/logout', [
+        // Szervező kijelentkezése
+        $this->router->post('/logout', [
             OrganizerController::class,
             'logout',
         ]);
