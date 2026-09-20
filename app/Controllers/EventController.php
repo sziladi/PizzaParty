@@ -9,6 +9,7 @@ use App\Core\Csrf;
 use App\Core\OrganizerAuth;
 use App\Core\Request;
 use App\Core\Response;
+use App\Core\Validator;
 use App\Core\View;
 use App\Models\EventModel;
 use App\Models\ParticipantModel;
@@ -32,6 +33,7 @@ class EventController
     ): void {
         OrganizerAuth::requireLogin();
 
+        // CSRF védelem
         $csrfToken = (string) $request->input('csrf_token');
 
         if (!Csrf::validate($csrfToken)) {
@@ -45,13 +47,53 @@ class EventController
             return;
         }
 
+        // Bemeneti adatok
+        $eventName = trim(
+            (string) $request->input('event_name')
+        );
+
+        $restaurantName = trim(
+            (string) $request->input('restaurant_name')
+        );
+
+        $menuUrl = trim(
+            (string) $request->input('menu_url')
+        );
+
+        $eventDate = trim(
+            (string) $request->input('event_date')
+        );
+
+        // Szerveroldali validáció
+        $errors = Validator::validateEvent(
+            $eventName,
+            $restaurantName,
+            $menuUrl,
+            $eventDate
+        );
+
+        if (!empty($errors)) {
+            http_response_code(400);
+
+            $response->send(
+                '<h2>Hiba</h2>' .
+                '<p>' .
+                htmlspecialchars(
+                    reset($errors)
+                ) .
+                '</p>'
+            );
+
+            return;
+        }
+
         $eventModel = new EventModel();
 
         $eventId = $eventModel->create(
-            (string) $request->input('event_name'),
-            (string) $request->input('restaurant_name'),
-            (string) $request->input('menu_url'),
-            (string) $request->input('event_date')
+            $eventName,
+            $restaurantName,
+            $menuUrl,
+            $eventDate
         );
 
         header('Location: /event/' . $eventId);
@@ -124,6 +166,7 @@ class EventController
     ): void {
         OrganizerAuth::requireLogin();
 
+        // CSRF védelem
         $csrfToken = (string) $request->input('csrf_token');
 
         if (!Csrf::validate($csrfToken)) {
@@ -137,14 +180,54 @@ class EventController
             return;
         }
 
+        // Bemeneti adatok
+        $eventName = trim(
+            (string) $request->input('event_name')
+        );
+
+        $restaurantName = trim(
+            (string) $request->input('restaurant_name')
+        );
+
+        $menuUrl = trim(
+            (string) $request->input('menu_url')
+        );
+
+        $eventDate = trim(
+            (string) $request->input('event_date')
+        );
+
+        // Szerveroldali validáció
+        $errors = Validator::validateEvent(
+            $eventName,
+            $restaurantName,
+            $menuUrl,
+            $eventDate
+        );
+
+        if (!empty($errors)) {
+            http_response_code(400);
+
+            $response->send(
+                '<h2>Hiba</h2>' .
+                '<p>' .
+                htmlspecialchars(
+                    reset($errors)
+                ) .
+                '</p>'
+            );
+
+            return;
+        }
+
         $eventModel = new EventModel();
 
         $eventModel->update(
             $id,
-            (string) $request->input('event_name'),
-            (string) $request->input('restaurant_name'),
-            (string) $request->input('menu_url'),
-            (string) $request->input('event_date')
+            $eventName,
+            $restaurantName,
+            $menuUrl,
+            $eventDate
         );
 
         $event = $eventModel->findById($id);

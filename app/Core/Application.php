@@ -105,6 +105,11 @@ class Application
 
     public function run(): void
     {
+        // Session elindítása az alkalmazás minden kéréséhez
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
+
         $this->router->dispatch(
             $_SERVER['REQUEST_METHOD'],
             $_SERVER['REQUEST_URI']
