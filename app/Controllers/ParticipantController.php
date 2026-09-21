@@ -48,27 +48,6 @@ class ParticipantController
             (string) $request->input('pizza_choice')
         );
 
-        // Szerveroldali validáció
-        $errors = Validator::validateParticipant(
-            $name,
-            $pizzaChoice
-        );
-
-        if (!empty($errors)) {
-            http_response_code(400);
-
-            $response->send(
-                '<h2>Hiba</h2>' .
-                '<p>' .
-                htmlspecialchars(
-                    reset($errors)
-                ) .
-                '</p>'
-            );
-
-            return;
-        }
-
         $eventModel = new EventModel();
 
         $event = $eventModel->findById(
@@ -82,6 +61,38 @@ class ParticipantController
             $response->send(
                 '<h2>404 - A pizzaest nem található.</h2>'
             );
+
+            return;
+        }
+
+        // Szerveroldali validáció
+        $errors = Validator::validateParticipant(
+            $name,
+            $pizzaChoice
+        );
+
+        if (!empty($errors)) {
+            http_response_code(400);
+
+            $participantModel = new ParticipantModel();
+
+            $participants = $participantModel->getByEventId(
+                $eventId
+            );
+
+            $html = View::render(
+                'event/show',
+                [
+                    'title' => $event['event_name'],
+                    'event' => $event,
+                    'participants' => $participants,
+                    'errors' => $errors,
+                    'participant_name' => $name,
+                    'pizza_choice' => $pizzaChoice,
+                ]
+            );
+
+            $response->send($html);
 
             return;
         }
@@ -268,14 +279,69 @@ class ParticipantController
         if (!empty($errors)) {
             http_response_code(400);
 
-            $response->send(
-                '<h2>Hiba</h2>' .
-                '<p>' .
-                htmlspecialchars(
-                    reset($errors)
-                ) .
-                '</p>'
+            $participantModel = new ParticipantModel();
+
+            $participant = $participantModel->findByEditToken(
+                $editToken
             );
+
+            if ($participant === null) {
+                http_response_code(404);
+
+                $response->send(
+                    '<h2>404 - A módosító link érvénytelen.</h2>'
+                );
+
+                return;
+            }
+
+            $eventModel = new EventModel();
+
+            $event = $eventModel->findById(
+                (int) $participant['event_id']
+            );
+
+            if ($event === null) {
+                http_response_code(404);
+
+                $response->send(
+                    '<h2>404 - A pizzaest nem található.</h2>'
+                );
+
+                return;
+            }
+
+            if ($this->isModificationClosed($event)) {
+                http_response_code(403);
+
+                $response->send(
+                    '<h2>🔒 A jelentkezés módosítása lezárult.</h2>' .
+                    '<p>' .
+                    'Ennek a pizzaestnek a napja már elkezdődött, ' .
+                    'ezért a jelentkezés már nem módosítható.' .
+                    '</p>'
+                );
+
+                return;
+            }
+
+            $participantForView = $participant;
+
+            $participantForView['name'] = $name;
+            $participantForView['pizza_choice'] = $pizzaChoice;
+
+            $html = View::render(
+                'participant/edit',
+                [
+                    'title' => 'Jelentkezés módosítása',
+                    'event' => $event,
+                    'participant' => $participantForView,
+                    'edit_token' => $editToken,
+                    'errors' => $errors,
+                ]
+            );
+
+            $response->send($html);
 
             return;
         }

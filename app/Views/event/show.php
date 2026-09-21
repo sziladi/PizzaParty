@@ -96,6 +96,13 @@
 
     <h3>👤 Jelentkezés</h3>
 
+    <?php
+    $errors = $errors ?? [];
+
+    $participantName = $participant_name ?? '';
+    $pizzaChoice = $pizza_choice ?? '';
+    ?>
+
     <form
         method="post"
         action="/event/<?= (int) $event['id'] ?>/participate"
@@ -120,7 +127,15 @@
                 name="name"
                 maxlength="100"
                 required
+                value="<?= htmlspecialchars($participantName) ?>"
             >
+
+            <?php if (isset($errors['name'])): ?>
+                <br>
+                <span class="error">
+                    <?= htmlspecialchars($errors['name']) ?>
+                </span>
+            <?php endif; ?>
         </p>
 
         <p>
@@ -137,7 +152,14 @@
                 rows="3"
                 required
                 placeholder="Pl. 1 Margherita, 1 Húshegy"
-            ></textarea>
+            ><?= htmlspecialchars($pizzaChoice) ?></textarea>
+
+            <?php if (isset($errors['pizza_choice'])): ?>
+                <br>
+                <span class="error">
+                    <?= htmlspecialchars($errors['pizza_choice']) ?>
+                </span>
+            <?php endif; ?>
         </p>
 
         <button class="button" type="submit">

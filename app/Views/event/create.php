@@ -1,5 +1,14 @@
 <h2>Új pizzaest</h2>
 
+<?php
+$errors = $errors ?? [];
+
+$eventName = $event_name ?? '';
+$restaurantName = $restaurant_name ?? '';
+$menuUrl = $menu_url ?? '';
+$eventDate = $event_date ?? '';
+?>
+
 <form method="post" action="/event/create">
 
     <input
@@ -9,25 +18,87 @@
     >
 
     <p>
-        <label>Esemény neve</label><br>
-        <input type="text" name="event_name">
+        <label for="event_name">
+            Esemény neve
+        </label><br>
+
+        <input
+            type="text"
+            id="event_name"
+            name="event_name"
+            value="<?= htmlspecialchars($eventName) ?>"
+        >
+
+        <?php if (isset($errors['event_name'])): ?>
+            <br>
+            <span class="error">
+                <?= htmlspecialchars($errors['event_name']) ?>
+            </span>
+        <?php endif; ?>
     </p>
 
     <p>
-        <label>Étterem neve</label><br>
-        <input type="text" name="restaurant_name">
+        <label for="restaurant_name">
+            Étterem neve
+        </label><br>
+
+        <input
+            type="text"
+            id="restaurant_name"
+            name="restaurant_name"
+            value="<?= htmlspecialchars($restaurantName) ?>"
+        >
+
+        <?php if (isset($errors['restaurant_name'])): ?>
+            <br>
+            <span class="error">
+                <?= htmlspecialchars($errors['restaurant_name']) ?>
+            </span>
+        <?php endif; ?>
     </p>
 
     <p>
-        <label>Étlap URL</label><br>
-        <input type="url" name="menu_url">
+        <label for="menu_url">
+            Étlap URL
+        </label><br>
+
+        <input
+            type="url"
+            id="menu_url"
+            name="menu_url"
+            value="<?= htmlspecialchars($menuUrl) ?>"
+        >
+
+        <?php if (isset($errors['menu_url'])): ?>
+            <br>
+            <span class="error">
+                <?= htmlspecialchars($errors['menu_url']) ?>
+            </span>
+        <?php endif; ?>
     </p>
 
     <p>
-        <label>Dátum</label><br>
-        <input type="date" name="event_date">
+        <label for="event_date">
+            Dátum
+        </label><br>
+
+        <input
+            type="date"
+            id="event_date"
+            name="event_date"
+            value="<?= htmlspecialchars($eventDate) ?>"
+        >
+
+        <?php if (isset($errors['event_date'])): ?>
+            <br>
+            <span class="error">
+                <?= htmlspecialchars($errors['event_date']) ?>
+            </span>
+        <?php endif; ?>
     </p>
 
-    <button type="submit">Létrehozás</button>
+    <button type="submit">
+        Létrehozás
+    </button>
 
 </form>

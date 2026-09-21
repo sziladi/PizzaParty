@@ -21,7 +21,12 @@ class EventController
         OrganizerAuth::requireLogin();
 
         $html = View::render('event/create', [
-            'title' => Config::get('app', 'name') . ' - Új esemény'
+            'title' => Config::get('app', 'name') . ' - Új esemény',
+            'event_name' => '',
+            'restaurant_name' => '',
+            'menu_url' => '',
+            'event_date' => '',
+            'errors' => [],
         ]);
 
         $response->send($html);
@@ -75,14 +80,16 @@ class EventController
         if (!empty($errors)) {
             http_response_code(400);
 
-            $response->send(
-                '<h2>Hiba</h2>' .
-                '<p>' .
-                htmlspecialchars(
-                    reset($errors)
-                ) .
-                '</p>'
-            );
+            $html = View::render('event/create', [
+                'title' => Config::get('app', 'name') . ' - Új esemény',
+                'event_name' => $eventName,
+                'restaurant_name' => $restaurantName,
+                'menu_url' => $menuUrl,
+                'event_date' => $eventDate,
+                'errors' => $errors,
+            ]);
+
+            $response->send($html);
 
             return;
         }
@@ -154,6 +161,7 @@ class EventController
         $html = View::render('event/edit', [
             'title' => 'Pizzaest szerkesztése',
             'event' => $event,
+            'errors' => [],
         ]);
 
         $response->send($html);
@@ -208,14 +216,21 @@ class EventController
         if (!empty($errors)) {
             http_response_code(400);
 
-            $response->send(
-                '<h2>Hiba</h2>' .
-                '<p>' .
-                htmlspecialchars(
-                    reset($errors)
-                ) .
-                '</p>'
-            );
+            $event = [
+                'id' => $id,
+                'event_name' => $eventName,
+                'restaurant_name' => $restaurantName,
+                'menu_url' => $menuUrl,
+                'event_date' => $eventDate,
+            ];
+
+            $html = View::render('event/edit', [
+                'title' => 'Pizzaest szerkesztése',
+                'event' => $event,
+                'errors' => $errors,
+            ]);
+
+            $response->send($html);
 
             return;
         }
