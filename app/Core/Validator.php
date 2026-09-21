@@ -79,4 +79,31 @@ class Validator
 
         return $errors;
     }
+
+    public static function validateParticipant(
+        string $name,
+        string $pizzaChoice
+    ): array {
+        $errors = [];
+
+        // Résztvevő neve
+        if ($name === '') {
+            $errors['name'] =
+                'A név megadása kötelező.';
+        } elseif (mb_strlen($name) > 100) {
+            $errors['name'] =
+                'A név legfeljebb 100 karakter lehet.';
+        }
+
+        // Pizza választás
+        if ($pizzaChoice === '') {
+            $errors['pizza_choice'] =
+                'A pizza megadása kötelező.';
+        } elseif (mb_strlen($pizzaChoice) > 255) {
+            $errors['pizza_choice'] =
+                'A pizza megnevezése legfeljebb 255 karakter lehet.';
+        }
+
+        return $errors;
+    }
 }

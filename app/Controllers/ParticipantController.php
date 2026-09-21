@@ -8,6 +8,7 @@ use App\Core\Csrf;
 use App\Core\OrganizerAuth;
 use App\Core\Request;
 use App\Core\Response;
+use App\Core\Validator;
 use App\Core\View;
 use App\Models\EventModel;
 use App\Models\ParticipantModel;
@@ -24,18 +25,21 @@ class ParticipantController
         Request $request,
         Response $response
     ): void {
+        // CSRF védelem
         $csrfToken = (string) $request->input('csrf_token');
 
-if (!Csrf::validate($csrfToken)) {
-    http_response_code(403);
+        if (!Csrf::validate($csrfToken)) {
+            http_response_code(403);
 
-    $response->send(
-        '<h2>403 - Érvénytelen kérés.</h2>' .
-        '<p>A biztonsági token érvénytelen vagy hiányzik.</p>'
-    );
+            $response->send(
+                '<h2>403 - Érvénytelen kérés.</h2>' .
+                '<p>A biztonsági token érvénytelen vagy hiányzik.</p>'
+            );
 
-    return;
-}
+            return;
+        }
+
+        // Bemeneti adatok
         $name = trim(
             (string) $request->input('name')
         );
@@ -44,23 +48,22 @@ if (!Csrf::validate($csrfToken)) {
             (string) $request->input('pizza_choice')
         );
 
-        // Név ellenőrzése
-        if ($name === '') {
+        // Szerveroldali validáció
+        $errors = Validator::validateParticipant(
+            $name,
+            $pizzaChoice
+        );
+
+        if (!empty($errors)) {
             http_response_code(400);
 
             $response->send(
-                '<h2>Hiba</h2><p>A név megadása kötelező.</p>'
-            );
-
-            return;
-        }
-
-        // Pizzaigény ellenőrzése
-        if ($pizzaChoice === '') {
-            http_response_code(400);
-
-            $response->send(
-                '<h2>Hiba</h2><p>A pizza megadása kötelező.</p>'
+                '<h2>Hiba</h2>' .
+                '<p>' .
+                htmlspecialchars(
+                    reset($errors)
+                ) .
+                '</p>'
             );
 
             return;
@@ -218,6 +221,21 @@ if (!Csrf::validate($csrfToken)) {
         Request $request,
         Response $response
     ): void {
+        // CSRF védelem
+        $csrfToken = (string) $request->input('csrf_token');
+
+        if (!Csrf::validate($csrfToken)) {
+            http_response_code(403);
+
+            $response->send(
+                '<h2>403 - Érvénytelen kérés.</h2>' .
+                '<p>A biztonsági token érvénytelen vagy hiányzik.</p>'
+            );
+
+            return;
+        }
+
+        // Bemeneti adatok
         $editToken = trim(
             (string) $request->input('token')
         );
@@ -241,23 +259,22 @@ if (!Csrf::validate($csrfToken)) {
             return;
         }
 
-        // Név ellenőrzése
-        if ($name === '') {
+        // Szerveroldali validáció
+        $errors = Validator::validateParticipant(
+            $name,
+            $pizzaChoice
+        );
+
+        if (!empty($errors)) {
             http_response_code(400);
 
             $response->send(
-                '<h2>Hiba</h2><p>A név megadása kötelező.</p>'
-            );
-
-            return;
-        }
-
-        // Pizzaigény ellenőrzése
-        if ($pizzaChoice === '') {
-            http_response_code(400);
-
-            $response->send(
-                '<h2>Hiba</h2><p>A pizza megadása kötelező.</p>'
+                '<h2>Hiba</h2>' .
+                '<p>' .
+                htmlspecialchars(
+                    reset($errors)
+                ) .
+                '</p>'
             );
 
             return;
@@ -355,26 +372,26 @@ if (!Csrf::validate($csrfToken)) {
     }
 
     public function delete(
-    int $id,
-    Request $request,
-    Response $response
-): void {
-    OrganizerAuth::requireLogin();
+        int $id,
+        Request $request,
+        Response $response
+    ): void {
+        OrganizerAuth::requireLogin();
 
-    $csrfToken = (string) $request->input('csrf_token');
+        $csrfToken = (string) $request->input('csrf_token');
 
-    if (!Csrf::validate($csrfToken)) {
-        http_response_code(403);
+        if (!Csrf::validate($csrfToken)) {
+            http_response_code(403);
 
-        $response->send(
-            '<h2>403 - Érvénytelen kérés.</h2>' .
-            '<p>A biztonsági token érvénytelen vagy hiányzik.</p>'
-        );
+            $response->send(
+                '<h2>403 - Érvénytelen kérés.</h2>' .
+                '<p>A biztonsági token érvénytelen vagy hiányzik.</p>'
+            );
 
-        return;
-    }
+            return;
+        }
 
-    $participantModel = new ParticipantModel();
+        $participantModel = new ParticipantModel();
 
         $participant = $participantModel->findById(
             $id
