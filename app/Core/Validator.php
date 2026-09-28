@@ -90,18 +90,18 @@ class Validator
         if ($name === '') {
             $errors['name'] =
                 'A név megadása kötelező.';
-        } elseif (mb_strlen($name) > 100) {
+        } elseif (mb_strlen($name) > 30) {
             $errors['name'] =
-                'A név legfeljebb 100 karakter lehet.';
+                'A név legfeljebb 30 karakter lehet.';
         }
 
         // Pizza választás
         if ($pizzaChoice === '') {
             $errors['pizza_choice'] =
                 'A pizza megadása kötelező.';
-        } elseif (mb_strlen($pizzaChoice) > 255) {
+        } elseif (mb_strlen($pizzaChoice) > 30) {
             $errors['pizza_choice'] =
-                'A pizza megnevezése legfeljebb 255 karakter lehet.';
+                'A pizza megnevezése legfeljebb 30 karakter lehet.';
         }
 
         return $errors;

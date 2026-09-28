@@ -125,17 +125,10 @@
                 type="text"
                 id="name"
                 name="name"
-                maxlength="100"
+                maxlength="30"
                 required
                 value="<?= htmlspecialchars($participantName) ?>"
             >
-
-            <?php if (isset($errors['name'])): ?>
-                <br>
-                <span class="error">
-                    <?= htmlspecialchars($errors['name']) ?>
-                </span>
-            <?php endif; ?>
         </p>
 
         <p>
@@ -148,21 +141,17 @@
             <textarea
                 id="pizza_choice"
                 name="pizza_choice"
-                maxlength="255"
+                maxlength="30"
                 rows="3"
                 required
                 placeholder="Pl. 1 Margherita, 1 Húshegy"
             ><?= htmlspecialchars($pizzaChoice) ?></textarea>
-
-            <?php if (isset($errors['pizza_choice'])): ?>
-                <br>
-                <span class="error">
-                    <?= htmlspecialchars($errors['pizza_choice']) ?>
-                </span>
-            <?php endif; ?>
         </p>
 
-        <button class="button" type="submit">
+        <button
+            class="button"
+            type="submit"
+        >
             🍕 Jelentkezem
         </button>
 
@@ -205,3 +194,40 @@
     </form>
 
 <?php endif; ?>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const nameInput = document.getElementById('name');
+    const pizzaInput = document.getElementById('pizza_choice');
+
+    nameInput.addEventListener('invalid', function () {
+        if (nameInput.validity.valueMissing) {
+            nameInput.setCustomValidity(
+                'A név megadása kötelező.'
+            );
+        } else {
+            nameInput.setCustomValidity('');
+        }
+    });
+
+    nameInput.addEventListener('input', function () {
+        nameInput.setCustomValidity('');
+    });
+
+    pizzaInput.addEventListener('invalid', function () {
+        if (pizzaInput.validity.valueMissing) {
+            pizzaInput.setCustomValidity(
+                'A pizza megadása kötelező.'
+            );
+        } else {
+            pizzaInput.setCustomValidity('');
+        }
+    });
+
+    pizzaInput.addEventListener('input', function () {
+        pizzaInput.setCustomValidity('');
+    });
+
+});
+</script>
