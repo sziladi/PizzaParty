@@ -46,7 +46,7 @@ class Database
                 ]
             );
         } catch (PDOException $exception) {
-            die('Adatbázis kapcsolódási hiba: ' . $exception->getMessage());
+            throw $exception;
         }
 
         return self::$connection;

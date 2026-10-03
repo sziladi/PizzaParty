@@ -105,14 +105,34 @@ class Application
 
     public function run(): void
     {
-        // Session elindítása az alkalmazás minden kéréséhez
-        if (session_status() !== PHP_SESSION_ACTIVE) {
-            session_start();
-        }
+        try {
 
-        $this->router->dispatch(
-            $_SERVER['REQUEST_METHOD'],
-            $_SERVER['REQUEST_URI']
-        );
+            // Session elindítása az alkalmazás minden kéréséhez
+            if (session_status() !== PHP_SESSION_ACTIVE) {
+                session_start();
+            }
+
+            $this->router->dispatch(
+                $_SERVER['REQUEST_METHOD'],
+                $_SERVER['REQUEST_URI']
+            );
+
+        } catch (\Throwable $exception) {
+
+            // A részletes technikai hiba a PHP logba kerül.
+            error_log(
+                sprintf(
+                    'PizzaParty application error: %s in %s on line %d',
+                    $exception->getMessage(),
+                    $exception->getFile(),
+                    $exception->getLine()
+                )
+            );
+
+            // A felhasználó csak általános hibaüzenetet kap.
+            http_response_code(500);
+
+            echo View::render('error');
+        }
     }
 }
