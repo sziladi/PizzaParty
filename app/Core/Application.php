@@ -108,9 +108,7 @@ class Application
         try {
 
             // Session elindítása az alkalmazás minden kéréséhez
-            if (session_status() !== PHP_SESSION_ACTIVE) {
-                session_start();
-            }
+            Session::start();
 
             $this->router->dispatch(
                 $_SERVER['REQUEST_METHOD'],

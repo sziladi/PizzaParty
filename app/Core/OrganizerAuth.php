@@ -24,6 +24,8 @@ class OrganizerAuth
             return false;
         }
 
+        session_regenerate_id(true);
+
         $_SESSION['organizer'] = true;
 
         return true;

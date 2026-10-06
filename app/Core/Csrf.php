@@ -10,10 +10,6 @@ class Csrf
 
     public static function token(): string
     {
-        if (session_status() !== PHP_SESSION_ACTIVE) {
-            session_start();
-        }
-
         if (
             !isset($_SESSION[self::SESSION_KEY]) ||
             !is_string($_SESSION[self::SESSION_KEY])
@@ -28,10 +24,6 @@ class Csrf
 
     public static function validate(string $token): bool
     {
-        if (session_status() !== PHP_SESSION_ACTIVE) {
-            session_start();
-        }
-
         if (
             !isset($_SESSION[self::SESSION_KEY]) ||
             !is_string($_SESSION[self::SESSION_KEY])
