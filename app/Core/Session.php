@@ -12,9 +12,11 @@ class Session
             return;
         }
 
+        $secure = getenv('SESSION_SECURE');
+
         session_set_cookie_params([
             'httponly' => true,
-            'secure' => false,
+            'secure' => $secure === 'true',
             'samesite' => 'Lax',
         ]);
 
