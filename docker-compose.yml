@@ -19,7 +19,7 @@ services:
   php:
     build:
       context: .
-      dockerfile: docker/php/Dockerfile
+      dockerfile: docker/php/dockerfile
 
     container_name: pizzaparty-php
 
@@ -47,13 +47,17 @@ services:
 
     environment:
       TZ: ${TZ}
+      ORGANIZER_PASSWORD_HASH: ${ORGANIZER_PASSWORD_HASH}
+      DB_HOST: mysql
+      DB_PORT: 3306
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
 
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
 
     restart: unless-stopped
 
